@@ -2,22 +2,23 @@ package com.pretki.logic;
 
 import com.pretki.model.Account;
 import com.pretki.model.User;
+import com.pretki.utils.UserList;
 import org.w3c.dom.ls.LSOutput;
 
 import java.util.Scanner;
 
 public class Engine {
 
-    private User[] users = new User[10];
+    private UserList userList = new UserList();
 
     public void start(){
 
         System.out.println("Witamy w banku. Podaj swój login");
         Scanner scanner = new Scanner(System.in);
-        NumberGenerator generator = new NumberGenerator(users);
+        NumberGenerator generator = new NumberGenerator(userList.getAll());
         String login = scanner.next();
 
-        User checkUser = findUser(login);
+        User checkUser = userList.findUser(login);
         if (checkUser == null){
             System.out.println("Konto zostało utworzone");
             User newUser = createUser(generator, login);
@@ -34,12 +35,7 @@ public class Engine {
     }
 
     private void addUser(User newUser) {
-        for (int i = 0; i < users.length ; i++) {
-            if(users[i] == null){
-                users[i] = newUser;
-                break;
-            }
-        }
+        userList.addUser(newUser);
     }
 
     private Account createAccount(NumberGenerator generator) {
@@ -49,19 +45,8 @@ public class Engine {
         return newAccount;
     }
 
-    private User findUser(String login) {
-        User checkUser= null;
-        for (User user: users) {
-            if(user != null && login.equals(user.getLogin())){
-                checkUser = user;
-                break;
-            }
-        }
-        return checkUser;
-    }
-
     public void printUsers() {
-        for (User user : users) {
+        for (User user : userList.getAll()) {
             System.out.println(user);
         }
     }
